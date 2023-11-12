@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Password Generator</title>
+
+</head>
+<body class="bg-blue-950 text-white flex justify-center items-center h-screen " >
+<div id="password-container" class="border-2 border-white p-24">
+    <h1 class="text-4xl mb-5 font-semibold font-serif">Password Generator</h1>
+    <div class="flex justify-center mb-8 text-2xl" id="generated-password"><input class="px-20" type="password" placeholder="Click on Generate button"></div>
+    <button onclick="generatePassword()" class="bg-blue-500 px-4 mb-3 text-xl">Generate Password</button>
+    <button onclick="copyToClipboard()"  class="bg-blue-500 px-4 mb-3 text-xl mx-4">Copy to Clipboard</button>
+    <div>
+        <label for="length">Password Length:</label>
+        <input class="text-black w-10 mx-14" type="number" id="length" min="1" value="12">
+    </div>
+    <div class="flex flex-col justify-center mt-2 ">
+        <input type="checkbox" id="uppercase" > <label for="uppercase">Include Uppercase letters</label>
+        <input type="checkbox" id="lowercase"> <label for="lowercase">Include Lowercase letters</label>
+        <input type="checkbox" id="numbers"> <label for="numbers">Include Numbers</label>
+        <input type="checkbox" id="symbols"> <label for="symbols">Include Symbols</label>
+    </div>
+   
+   
+
+    <script>
+        function generatePassword() {
+            const length = document.getElementById("length").value;
+            const uppercase = document.getElementById("uppercase").checked;
+            const lowercase = document.getElementById("lowercase").checked;
+            const numbers = document.getElementById("numbers").checked;
+            const symbols = document.getElementById("symbols").checked;
+
+            const charset = generateCharset(uppercase, lowercase, numbers, symbols);
+
+            if (charset.length === 0) {
+                alert("Please select at least one character type.");
+                return;
+            }
+
+            const password = generateRandomPassword(length, charset);
+            document.getElementById("generated-password").textContent = password;
+        }
+
+        function generateCharset(uppercase, lowercase, numbers, symbols) {
+            let charset = '';
+
+            if (uppercase) {
+                charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            }
+            if (lowercase) {
+                charset += 'abcdefghijklmnopqrstuvwxyz';
+            }
+            if (numbers) {
+                charset += '0123456789';
+            }
+            if (symbols) {
+                charset += '!@#$%^&*()_-+=<>?/{}[]';
+            }
+
+            return charset;
+        }
+
+        function generateRandomPassword(length, charset) {
+            let password = '';
+            const charsetLength = charset.length;
+
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charsetLength);
+                password += charset.charAt(randomIndex);
+            }
+
+            return password;
+        }
+
+        function copyToClipboard() {
+            const passwordInput = document.getElementById("generated-password");
+            const textArea = document.createElement("textarea");
+            textArea.value = passwordInput.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            alert("Password copied to clipboard!");
+        }
+    </script>
+</div>
+</body>
+</html>
